@@ -7,11 +7,53 @@
   <meta name="description" content="Finde Cocktails mit den Zutaten, die du zu Hause hast, und entdecke jeden Tag einen neuen Cocktail des Tages.">
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
+  <!-- Strukturierte Daten nach schema.org, damit Suchmaschinen die Seite als Website mit Suchfunktion erkennen -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Cocktail-Finder",
+    "url": "https://max-guenther.github.io/Web-Engineering/",
+    "description": "Cocktails nach Zutaten finden, die man zu Hause hat, mit einem Cocktail des Tages auf der Startseite.",
+    "inLanguage": "de",
+    "author": [
+      { "@type": "Person", "name": "Max Günther" },
+      { "@type": "Person", "name": "Simon Schneider" }
+    ],
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://max-guenther.github.io/Web-Engineering/finder.html?zutaten={zutaten}",
+      "query-input": "required name=zutaten"
+    }
+  }
+  </script>
+  <!-- Der Cocktail des Tages als Rezept, dafür kann Google ein Rich Result mit Bild anzeigen -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Recipe",
+    "name": "Margarita",
+    "image": "https://www.thecocktaildb.com/images/media/drink/5noda61589575158.jpg",
+    "description": "Klassiker aus Mexiko, alkoholisch, serviert im Cocktailglas.",
+    "author": { "@type": "Organization", "name": "TheCocktailDB" },
+    "recipeCategory": "Cocktail",
+    "recipeCuisine": "Mexikanisch",
+    "keywords": "Cocktail des Tages, Tequila, Limette",
+    "recipeYield": "1 Glas",
+    "recipeIngredient": ["3,5 cl Tequila", "1,5 cl Triple Sec", "3 cl Limettensaft", "Salz für den Glasrand"],
+    "recipeInstructions": [
+      { "@type": "HowToStep", "text": "Den Glasrand mit einer Limettenscheibe anfeuchten und in Salz drücken." },
+      { "@type": "HowToStep", "text": "Tequila, Triple Sec und Limettensaft mit Eis schütteln." },
+      { "@type": "HowToStep", "text": "Vorsichtig ins Glas abseihen." }
+    ]
+  }
+  </script>
 </head>
 <body>
   <header>
     <nav aria-label="Hauptmenü">
-      <a href="index.html">Start</a>
+      <a href="index.html" aria-current="page">Start</a>
+      <a href="finder.html">Finder</a>
       <a href="ueber.html">Über</a>
     </nav>
   </header>
@@ -20,22 +62,35 @@
     <h1>Cocktail-Finder</h1>
     <p>Finde Cocktails mit den Zutaten, die du zu Hause hast. Jeden Tag gibt es hier außerdem einen Cocktail des Tages.</p>
 
-    <!-- Ab Termin 2: euer Formular
-    <form>
-      <label for="suche">Suche</label>
-      <input id="suche" name="suche" type="text" required minlength="3">
-      <button type="submit">Los</button>
-    </form>
-    -->
+    <section aria-labelledby="tages-titel">
+      <h2 id="tages-titel">Cocktail des Tages</h2>
+      <!-- Platzhalter: Später kommt der Cocktail aus der API und wird aus dem Datum berechnet -->
+      <article>
+        <h3>Margarita</h3>
+        <p>Klassiker aus Mexiko, alkoholisch, serviert im Cocktailglas.</p>
+        <ul>
+          <li>3,5 cl Tequila</li>
+          <li>1,5 cl Triple Sec</li>
+          <li>3 cl Limettensaft</li>
+          <li>Salz für den Glasrand</li>
+        </ul>
+        <p>Jeden Tag steht hier ein anderer Cocktail, für alle Besucher derselbe.</p>
+      </article>
+    </section>
 
-    <!-- Ab Termin 6: hier landen die Daten
-    <p id="status" role="status"></p>
-    <ul id="ergebnisse"></ul>
-    -->
+    <section aria-labelledby="ablauf-titel">
+      <h2 id="ablauf-titel">So funktioniert es</h2>
+      <ol>
+        <li>Im <a href="finder.html">Finder</a> die Zutaten eingeben, die du da hast.</li>
+        <li>Auswählen, ob mit oder ohne Alkohol.</li>
+        <li>Passende Cocktails mit Rezept ansehen.</li>
+      </ol>
+    </section>
   </main>
 
   <footer>
     <p>Web-Engineering 1 · DHBW Karlsruhe · <span id="jahr"></span></p>
+    <p>Daten von <a href="https://www.thecocktaildb.com/">TheCocktailDB</a></p>
   </footer>
 </body>
 </html>

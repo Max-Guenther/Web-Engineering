@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Finder - Cocktails nach Zutaten suchen | Cocktail-Finder</title>
+  <meta name="description" content="Gib die Zutaten ein, die du zu Hause hast, und finde passende Cocktails, mit oder ohne Alkohol.">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <nav aria-label="Hauptmenü">
+      <a href="index.html">Start</a>
+      <a href="finder.html" aria-current="page">Finder</a>
+      <a href="ueber.html">Über</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>Cocktails nach Zutaten finden</h1>
+
+    <section aria-labelledby="suche-titel">
+      <h2 id="suche-titel">Suche</h2>
+      <!-- method="get" hängt die Eingaben an die URL, so kann JavaScript sie später auslesen -->
+      <form action="finder.html" method="get">
+        <p>
+          <label for="zutaten">Zutaten</label>
+          <input id="zutaten" name="zutaten" type="text" required minlength="3"
+                 pattern="[A-Za-zÄÖÜäöüß ,\-]+" aria-describedby="zutaten-hinweis"
+                 placeholder="z. B. Gin, Lime" autocomplete="off">
+          <small id="zutaten-hinweis">Auf Englisch, wie in der Datenbank. Mehrere Zutaten mit Komma trennen.</small>
+        </p>
+
+        <fieldset>
+          <legend>Alkohol</legend>
+          <label><input type="radio" name="alkohol" value="alle" checked> egal</label>
+          <label><input type="radio" name="alkohol" value="alkoholisch"> mit Alkohol</label>
+          <label><input type="radio" name="alkohol" value="alkoholfrei"> alkoholfrei</label>
+        </fieldset>
+
+        <p>
+          <label for="max-zutaten">Höchstens so viele Zutaten</label>
+          <input id="max-zutaten" name="max-zutaten" type="number" min="2" max="15" value="15">
+        </p>
+
+        <p>
+          <label for="sortierung">Sortieren nach</label>
+          <select id="sortierung" name="sortierung">
+            <option value="name">Name</option>
+            <option value="zutaten">Anzahl der Zutaten</option>
+          </select>
+        </p>
+
+        <button type="submit">Cocktails suchen</button>
+      </form>
+    </section>
+
+    <section aria-labelledby="ergebnis-titel">
+      <h2 id="ergebnis-titel">Ergebnisse</h2>
+      <!-- Hier werden später die Treffer ohne Reload eingefügt -->
+      <p>Noch keine Suche. Gib oben deine Zutaten ein.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Web-Engineering 1 · DHBW Karlsruhe · <span id="jahr"></span></p>
+    <p>Daten von <a href="https://www.thecocktaildb.com/">TheCocktailDB</a></p>
+  </footer>
+</body>
+</html>
