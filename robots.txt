@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://max-guenther.github.io/Web-Engineering/sitemap.xml

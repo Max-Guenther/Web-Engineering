@@ -1,0 +1,15 @@
+# Cocktail-Finder
+
+> Web-App, die Cocktails nach den Zutaten findet, die man zu Hause hat. Auf der Startseite steht jeden Tag ein Cocktail des Tages, der für alle Besucher gleich ist. Semesterprojekt in Web-Engineering 1 an der DHBW Karlsruhe von Max Günther und Simon Schneider.
+
+Die Daten kommen aus TheCocktailDB (Test-Key `1`). Weil deren Zutatensuche mit diesem Key nur einen Treffer liefert, lädt die App alle rund 440 Cocktails und filtert im Browser.
+
+## Seiten
+
+- [Start](https://max-guenther.github.io/Web-Engineering/): Cocktail des Tages und kurze Anleitung
+- [Finder](https://max-guenther.github.io/Web-Engineering/finder.html): Suche nach Zutaten, Filter mit oder ohne Alkohol, Sortierung
+- [Über](https://max-guenther.github.io/Web-Engineering/ueber.html): Team, Datenquelle und technische Entscheidungen
+
+## Datenquelle
+
+- [TheCocktailDB API](https://www.thecocktaildb.com/api.php): freie Cocktail-Datenbank mit Zutaten, Mengen und Anleitungen
