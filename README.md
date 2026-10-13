@@ -2,7 +2,7 @@
 
 Der Cocktail-Finder zeigt dir, welche Cocktails du mit den Zutaten mixen kannst, die du gerade zu Hause hast, auch mit mehreren Zutaten gleichzeitig. Dazu gibt es jeden Tag einen Cocktail des Tages, der für alle Besucher derselbe ist.
 
-**Live:** folgt mit Termin 5 (GitHub Pages)
+**Live:** folgt (GitHub Pages)
 **Team:** Max Günther, Simon Schneider
 
 ## Was die App kann
@@ -36,7 +36,10 @@ npx serve .
 
 ## Technik
 
+- **Mehrere HTML-Seiten statt Single-Page:** Start, Finder und Über haben unterschiedliche Aufgaben, und jede Seite bekommt so einen eigenen Titel und eine eigene URL.
+- **Formular ohne JavaScript:** `required`, `minlength` und `pattern` prüft der Browser selbst. `method="get"` legt die Eingaben in die URL, dort kann sie später das JavaScript auslesen.
 - **Suche im Browser statt per API:** `filter.php?i=` liefert mit dem Test-Key nur einen Treffer, also laden wir alle Cocktails und filtern selbst (siehe Datenquelle).
+- **`robots.txt`, `sitemap.xml`, `llms.txt` und JSON-LD:** Damit Suchmaschinen und KI-Crawler wissen, welche Seiten es gibt und worum es geht.
 
 ## KI-Log
 
@@ -44,6 +47,8 @@ npx serve .
 | --- | --- |
 | Claude | Ideenfindung: mir fünf Projektideen mit passender öffentlicher API vorschlagen lassen (Blatt 1, Teil B) |
 | Claude | Die vorgeschlagenen APIs antesten lassen, ob sie ohne Key und direkt aus dem Browser funktionieren |
+| Claude | Blatt 2: HTML auf Semantik prüfen lassen und Lighthouse-Meldungen erklären lassen |
+| Claude | Blatt 2: Gramatik und Rechtschreibungsprüfung |
 
 
 **Ein Fall, in dem KI geholfen hat:** Bevor ich mich auf den Cocktail-Finder festgelegt habe, habe ich die API gründlich testen lassen. Dabei kam heraus, dass `filter.php?i=Gin` mit dem Test-Key immer nur einen einzigen Cocktail liefert. Daraufhin habe ich das Konzept umgestellt: Alle Cocktails werden über `search.php?f=` geladen und im Browser gefiltert. Dadurch geht jetzt sogar die Suche nach mehreren Zutaten.
@@ -57,3 +62,22 @@ Was die Blätter ausdrücklich in der README sehen wollen, steht hier, nach Blat
 ### Blatt 1 · Setup und erster Start
 
 Projektname und Team stehen oben, die Begründung der verworfenen Ideen unter „Warum diese Idee“.
+
+### Blatt 2 · Das Gerüst
+
+- Drei Seiten (`index.html`, `finder.html`, `ueber.html`), jede mit `header`/`nav`, `main`, `footer` und genau einem `h1`
+- Suchformular in `finder.html`: Pflichtfeld mit `minlength` und `pattern`, dazu Radio-Buttons, Zahlenfeld und Auswahlliste, ohne JavaScript
+- Lighthouse Accessibility: 100 auf allen drei Seiten
+- `robots.txt` und `sitemap.xml` im Wurzelverzeichnis
+
+**Bonus, maschinenlesbar:** Im `head` der Startseite stehen zwei JSON-LD-Blöcke: `WebSite` mit `SearchAction` für die Seite selbst und `Recipe` für den Cocktail des Tages. Dazu liegt ein `llms.txt` im Wurzelverzeichnis.
+
+Den ersten Test mit nur dem `WebSite`-Block hat der Rich Results Test mit „Keine Elemente erkannt“ beantwortet. Das JSON-LD war gültig, aber Google zeigt für `WebSite` kein Rich Result mehr an. Mit dem `Recipe`-Block erkennt der Test ein gültiges Element. Die 14 nicht kritischen Hinweise betreffen optionale Felder wie Bewertung, Zubereitungszeit und Video.
+
+![Rich Results Test: 1 gültiges Element erkannt (Rezepte)](docs/rich-results.png)
+
+**Verständnisfragen**
+
+1. *Warum `<button>` statt `<div onclick="…">`?* Ein `button` ist von selbst per Tab erreichbar und löst mit Enter und Leertaste aus, ein `div` bekommt weder Fokus noch Tastenereignisse. Außerdem sagt der Screenreader „Schaltfläche“ an, bei einem `div` hört man nur den Text und weiß nicht, dass man darauf klicken kann.
+2. *Wofür ist `name` da?* `name` ist der Schlüssel, unter dem der Wert beim Absenden übertragen wird, bei uns `?zutaten=Gin`. Fehlt es, wird das Feld ohne jede Fehlermeldung einfach nicht mitgeschickt. Bei Radio-Buttons sorgt der gleiche `name` außerdem dafür, dass nur einer ausgewählt sein kann.
+3. *Zwei `h1` auf einer Seite: wen stört das?* Screenreader-Nutzer, die sich über die Überschriften einen Überblick verschaffen: Zwei `h1` sind zwei Hauptthemen, und man weiß nicht, worum es auf der Seite geht. Suchmaschinen stört es auch, weil das `h1` ein starkes Signal für das Thema ist. Der Browser zeigt beides problemlos an, sichtbar geht also nichts kaputt.
