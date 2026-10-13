@@ -3,19 +3,47 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Über - Cocktail-Finder</title>
+  <title>Über das Projekt - Cocktail-Finder</title>
+  <meta name="description" content="Wer den Cocktail-Finder gebaut hat, woher die Daten kommen und warum die Suche im Browser läuft.">
   <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
 </head>
 <body>
   <header>
     <nav aria-label="Hauptmenü">
       <a href="index.html">Start</a>
+      <a href="finder.html">Finder</a>
       <a href="ueber.html" aria-current="page">Über</a>
     </nav>
   </header>
+
   <main>
     <h1>Über dieses Projekt</h1>
-    <p>Wer hat es gebaut, warum, und woher kommen die Daten?</p>
+    <p>Der Cocktail-Finder ist unser Semesterprojekt in Web-Engineering 1 an der DHBW Karlsruhe (TINF25B3, Wintersemester 2026/27).</p>
+
+    <section aria-labelledby="team-titel">
+      <h2 id="team-titel">Team</h2>
+      <ul>
+        <li>Max Günther</li>
+        <li>Simon Schneider</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="daten-titel">
+      <h2 id="daten-titel">Woher die Daten kommen</h2>
+      <p>Alle Cocktails stammen aus <a href="https://www.thecocktaildb.com/">TheCocktailDB</a>, einer freien Cocktail-Datenbank mit Zutaten, Mengen und Anleitungen, teilweise auch auf Deutsch.</p>
+
+      <h3>Warum die Suche im Browser läuft</h3>
+      <p>Mit dem kostenlosen Zugang liefert die Zutatensuche der Datenbank nur einen einzigen Treffer. Deshalb lädt der Finder alle rund 440 Cocktails einmal und filtert sie selbst. Dadurch geht sogar die Suche nach mehreren Zutaten gleichzeitig.</p>
+
+      <h3>Wie der Cocktail des Tages entsteht</h3>
+      <p>Er wird aus dem heutigen Datum berechnet. So sieht jeder Besucher am selben Tag denselben Cocktail, ganz ohne eigenen Server.</p>
+    </section>
   </main>
+
+  <footer>
+    <p>Web-Engineering 1 · DHBW Karlsruhe · <span id="jahr"></span></p>
+    <p>Daten von <a href="https://www.thecocktaildb.com/">TheCocktailDB</a></p>
+  </footer>
 </body>
 </html>
