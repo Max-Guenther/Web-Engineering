@@ -2,7 +2,8 @@
 :root {
   --bg: #ffffff;
   --text: #1f1f1f;
-  --akzent: #0000ff;
+  --akzent: #1f1f1f;
+  --akzent-hover: #606060;
   --flaeche: #eef0fb;
   --radius: 12px;
   --abstand: 1rem;
@@ -32,7 +33,13 @@ nav {
   background: var(--flaeche);
 }
 
-a { color: var(--akzent); }
+a { color: var(--akzent);
+  text-decoration: none;
+  transition: color 0.3s;
+  &:hover {
+    color: var(--akzent-hover);
+  }
+}
 
 footer {
   position: fixed;
@@ -44,7 +51,7 @@ footer {
   align-items: center;
   padding: 0.5rem var(--abstand);
   font-size: .875rem;
-  color: #555;
+  color: var(--text);
   background: var(--flaeche);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
