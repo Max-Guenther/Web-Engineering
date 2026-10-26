@@ -27,7 +27,6 @@
   }
 }
 
-/* Ab 360px vorbereitet für ein späteres mehrspaltiges main-Layout. Aktuell bleibt main bewusst einspaltig. */
 * { box-sizing: border-box; }
 
 body {
