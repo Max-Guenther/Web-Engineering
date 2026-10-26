@@ -101,3 +101,14 @@ Der Attributselektor zählt wie eine Klasse in der mittleren Spalte, deshalb wü
 1. *`nav a { color: grey }` gegen `.aktiv { color: blue }`?* Blau gewinnt. `.aktiv` hat (0,1,0), `nav a` nur (0,0,2), und verglichen wird von links nach rechts: Eine Klasse schlägt beliebig viele Elementselektoren. Die Reihenfolge im Stylesheet spielt erst bei gleicher Spezifität eine Rolle.
 2. *Warum `rem` statt `px`?* `rem` richtet sich nach der Schriftgröße des Wurzelelements, und die kann man im Browser einstellen. Wer schlecht sieht und dort 20 statt 16 px einstellt, bekommt mit `rem` überall größere Schrift, mit `px` bleibt sie fest.
 3. *`z-index: 999` wirkt nicht?* Vermutlich ist das Element nicht positioniert: `z-index` greift nur bei `position` ungleich `static` (oder bei Flex- und Grid-Kindern). Der zweite häufige Grund ist ein Elternelement, das einen eigenen Stapelkontext mit niedrigerem `z-index` bildet. Dann zählt die 999 nur innerhalb dieses Elternelements.
+
+### Blatt 4 · Layout mit Flexbox und Grid
+
+- Der `main` verwendet Grid. Ab 768 px und 1280 px bekommt der Inhaltsbereich mehr Breite und Abstand, bleibt aber bewusst einspaltig, weil das für Text und Formulare übersichtlicher ist. Navigation, Formular, Radio-Auswahl und Footer nutzen Flexbox.
+-
+- Navigation, Footer und Abschnittskarten werden auf allen Seiten konsistent gestaltet. Die gemeinsamen Werte stehen zentral in `style.css`: Der Abstand heißt `--abstand`, der Radius `--radius` und die Farben heißen `--bg`, `--text`, `--akzent`, `--flaeche` und `--rand`. `nav` und `footer` kommen auf `index.html`, `finder.html` und `ueber.html` vor, `main section` wird auf den Inhaltsseiten mehrfach als Karte verwendet.
+-
+
+**Verständnisfragen**
+
+1. *Was bedeutet die Einheit `fr` in `grid-template-columns: 1fr 3fr`?* `fr` steht für fraction. Der verfügbare Platz wird dabei entsprechend den angegebenen Anteilen aufgeteilt. In diesem Beispiel wird er in vier gleich große Teile geteilt. Die erste Spalte erhält ein Viertel und die zweite drei Viertel des verfügbaren Platzes.

@@ -27,6 +27,7 @@
   }
 }
 
+/* Ab 360px vorbereitet für ein späteres mehrspaltiges main-Layout. Aktuell bleibt main bewusst einspaltig. */
 * { box-sizing: border-box; }
 
 body {
@@ -111,12 +112,27 @@ nav a[aria-current="page"] {
 }
 
 main {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--abstand);
   max-width: 65ch;
   margin-inline: auto;
   padding: var(--abstand);
+}
+
+/* Mobile first: auf größeren Viewports bekommt der Inhalt mehr Raum. */
+@media (min-width: 768px) {
+  main {
+    max-width: 70ch;
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  main {
+    max-width: 80ch;
+    padding: 2rem;
+  }
 }
 
 main > p { margin: 0; }
