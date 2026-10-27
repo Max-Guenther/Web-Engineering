@@ -6,7 +6,7 @@
   <title>Cocktail-Finder - Cocktails nach Zutaten finden</title>
   <meta name="description" content="Finde Cocktails mit den Zutaten, die du zu Hause hast, und entdecke jeden Tag einen neuen Cocktail des Tages.">
   <link rel="stylesheet" href="style.css">
-  <script src="app.js" defer></script>
+  <script type="module" src="app.js"></script>
   <!-- Strukturierte Daten nach schema.org, damit Suchmaschinen die Seite als Website mit Suchfunktion erkennen -->
   <script type="application/ld+json">
   {
@@ -65,9 +65,9 @@
     <section aria-labelledby="tages-titel">
       <h2 id="tages-titel">Cocktail des Tages</h2>
       <!-- Platzhalter: Später kommt der Cocktail aus der API und wird aus dem Datum berechnet -->
-      <article>
-        <span class="badge">Heute</span>
-        <h3>Margarita</h3>
+      <article class="relative rounded-xl bg-(--bg) p-4">
+        <span class="absolute top-4 right-4 rounded-xl bg-(--akzent) px-2.5 py-0.5 text-sm/normal font-bold text-(--bg)">Heute</span>
+        <h3 class="pr-18">Margarita</h3>
         <p>Klassiker aus Mexiko, alkoholisch, serviert im Cocktailglas.</p>
         <ul>
           <li>3,5 cl Tequila</li>
@@ -75,7 +75,7 @@
           <li>3 cl Limettensaft</li>
           <li>Salz für den Glasrand</li>
         </ul>
-        <p>Jeden Tag steht hier ein anderer Cocktail, für alle Besucher derselbe.</p>
+        <p class="mb-0">Jeden Tag steht hier ein anderer Cocktail, für alle Besucher derselbe.</p>
       </article>
     </section>
 

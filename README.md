@@ -28,11 +28,14 @@ Der Zutaten-Filter (`filter.php?i=`) liefert mit dem Test-Key nur einen Treffer.
 
 ## Lokal starten
 
-In VS Code mit Live Server öffnen – oder:
-
 ```bash
-npx serve .
+npm install     # einmalig, holt Vite und Tailwind
+npm run dev     # Dev-Server auf http://localhost:5173
+npm run build   # fertige Seite nach dist/
+npm run preview # dist/ lokal ansehen
 ```
+
+Live Server reicht nicht mehr, weil die Tailwind-Klassen erst durch Vite zu CSS werden.
 
 ## Technik
 
@@ -50,6 +53,7 @@ npx serve .
 | Claude | Blatt 2: HTML auf Semantik prüfen lassen und Lighthouse-Meldungen erklären lassen |
 | Claude | Blatt 2: Gramatik und Rechtschreibungsprüfung |
 | Claude | Blatt 3: Gramatik und Rechtschreibungsprüfung |
+| Claude | Blatt 4: Gramatik und Rechtschreibungsprüfung, Fehler mit Node 18 erklären lassen |
 
 
 **Ein Fall, in dem KI geholfen hat:** Bevor ich mich auf den Cocktail-Finder festgelegt habe, habe ich die API gründlich testen lassen. Dabei kam heraus, dass `filter.php?i=Gin` mit dem Test-Key immer nur einen einzigen Cocktail liefert. Daraufhin habe ich das Konzept umgestellt: Alle Cocktails werden über `search.php?f=` geladen und im Browser gefiltert. Dadurch geht jetzt sogar die Suche nach mehreren Zutaten.
@@ -105,10 +109,34 @@ Der Attributselektor zählt wie eine Klasse in der mittleren Spalte, deshalb wü
 ### Blatt 4 · Layout mit Flexbox und Grid
 
 - Der `main` verwendet Grid. Ab 768 px und 1280 px bekommt der Inhaltsbereich mehr Breite und Abstand, bleibt aber bewusst einspaltig, weil das für Text und Formulare übersichtlicher ist. Navigation, Formular, Radio-Auswahl und Footer nutzen Flexbox.
--
+- Die Karte „Cocktail des Tages“ auf der Startseite ist auf Tailwind umgestellt, der Rest bleibt eigenes CSS. Die Farben kommen weiter aus unseren Variablen (`bg-(--akzent)`), deshalb funktioniert der Dark Mode auch in der Karte. Tailwind ist ohne Preflight eingebunden, weil dessen Reset sonst auf allen Seiten z. B. die Listenpunkte entfernt hätte.
 - Navigation, Footer und Abschnittskarten werden auf allen Seiten konsistent gestaltet. Die gemeinsamen Werte stehen zentral in `style.css`: Der Abstand heißt `--abstand`, der Radius `--radius` und die Farben heißen `--bg`, `--text`, `--akzent`, `--flaeche` und `--rand`. `nav` und `footer` kommen auf `index.html`, `finder.html` und `ueber.html` vor, `main section` wird auf den Inhaltsseiten mehrfach als Karte verwendet.
--
+- Das Projekt läuft jetzt mit npm und Vite. `npm run build` baut alle drei Seiten nach `dist/`, `node_modules/` und `dist/` stehen in der `.gitignore`. `robots.txt`, `sitemap.xml` und `llms.txt` liegen in `public/`, Vite kopiert sie unverändert nach `dist/`.
+
+**Eigenes CSS gegen Tailwind** (Karte und Badge, vorher in `style.css`):
+
+| Vorher (eigenes CSS) | Tailwind |
+| --- | --- |
+| `position: relative` / `absolute` | `relative` / `absolute` |
+| `padding: var(--abstand)` (1rem) | `p-4` |
+| `top` und `right: var(--abstand)` | `top-4 right-4` |
+| `border-radius: var(--radius)` (12px) | `rounded-xl` |
+| `background: var(--bg)` | `bg-(--bg)` |
+| `color: var(--bg)` | `text-(--bg)` |
+| `padding: .125rem .625rem` | `py-0.5 px-2.5` |
+| `font-size: var(--schrift-klein)` mit Zeilenhöhe 1.5 | `text-sm/normal` |
+| `font-weight: 700` | `font-bold` |
+| `padding-right: 4.5rem` am `h3` | `pr-18` |
+| `margin-bottom: 0` am letzten Absatz | `mb-0` |
+
+Eine Tailwind-Stufe ist `0.25rem`, `p-4` sind also 1rem. Die Karte sieht vorher und nachher gleich aus, das habe ich mit Screenshots bei 360 und 1280 px verglichen.
+
+**Bonus, Vite mit Tailwind-Build:** Statt Play CDN baut das Tailwind-Plugin für Vite das CSS. In `dist/assets/` liegt danach eine einzige CSS-Datei mit 4,1 kB (1,5 kB gzip), davon sind nur rund 1,4 kB Tailwind. Sie bleibt so klein, weil Tailwind beim Build die Dateien des Projekts nach Klassennamen durchsucht und nur für die gefundenen Klassen CSS erzeugt. Die anderen tausenden Klassen existieren nur als Möglichkeit. Weil Tailwind dabei nur nach Wörtern sucht, landen auch `static` und `sticky` in der Datei: Die beiden Wörter stehen in dieser README.
+
+Tailwind ist auf 4.1 festgelegt, weil die Versionen ab 4.2 Node 20 voraussetzen und bei uns noch Node 18 läuft.
 
 **Verständnisfragen**
 
 1. *Was bedeutet die Einheit `fr` in `grid-template-columns: 1fr 3fr`?* `fr` steht für fraction. Der verfügbare Platz wird dabei entsprechend den angegebenen Anteilen aufgeteilt. In diesem Beispiel wird er in vier gleich große Teile geteilt. Die erste Spalte erhält ein Viertel und die zweite drei Viertel des verfügbaren Platzes.
+2. *Was macht `npm run build` mit dem Projektordner?* Es startet `vite build` aus den `scripts` in `package.json`. Vite liest die drei HTML-Seiten, bündelt CSS und JavaScript, lässt Tailwind nur die benutzten Klassen erzeugen, minifiziert alles und hängt einen Hash an die Dateinamen (`app-CVLrnnRM.css`), damit der Browser nach einer Änderung nicht die alte Version aus dem Cache nimmt. Das Ergebnis steht in `dist/`. Auf den Server kommt nur `dist/`: `node_modules/`, `package.json` und die Quelldateien braucht der Browser nicht, und `node_modules/` allein ist schon viel größer als die ganze Seite.
+3. *Warum `node_modules/` nicht ins Repo, `package-lock.json` aber schon?* `node_modules/` lässt sich mit `npm install` jederzeit neu erzeugen, ist groß und enthält teilweise Dateien für das jeweilige Betriebssystem, bei Tailwind zum Beispiel ein eigenes Programm für Linux. `package-lock.json` hält fest, welche Version jedes Pakets genau installiert wurde. Ohne die Datei würde `"^6.0.0"` bei Simon vielleicht eine andere Vite-Version installieren als bei mir.

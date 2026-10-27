@@ -1,3 +1,9 @@
+/* Tailwind ohne Preflight: Dessen Reset würde z. B. die Listenpunkte entfernen,
+   wir wollen aber nur die Utility-Klassen für die Karte des Tages */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
 /* Farben, Schrift und Abstände an einer Stelle */
 :root {
   color-scheme: light dark;
@@ -145,29 +151,7 @@ main section {
 
 main section > :last-child { margin-bottom: 0; }
 
-/* Der Cocktail des Tages als Karte in der Karte, mit Badge oben rechts */
-article {
-  position: relative;
-  padding: var(--abstand);
-  border-radius: var(--radius);
-  background: var(--bg);
-}
-
-article h3 { padding-right: 4.5rem; }
-
-article > :last-child { margin-bottom: 0; }
-
-.badge {
-  position: absolute;
-  top: var(--abstand);
-  right: var(--abstand);
-  padding: .125rem .625rem;
-  border-radius: var(--radius);
-  font-size: var(--schrift-klein);
-  font-weight: 700;
-  color: var(--bg);
-  background: var(--akzent);
-}
+/* Die Karte des Tages ist mit Tailwind-Klassen direkt in index.html gestylt */
 
 /* Formular im Finder */
 form {
