@@ -2,14 +2,17 @@
 
 Der Cocktail-Finder zeigt dir, welche Cocktails du mit den Zutaten mixen kannst, die du gerade zu Hause hast, auch mit mehreren Zutaten gleichzeitig. Dazu gibt es jeden Tag einen Cocktail des Tages, der für alle Besucher derselbe ist.
 
-**Live:** folgt (GitHub Pages)
+**Live:** <https://max-guenther.github.io/Web-Engineering/>
 **Team:** Max Günther, Simon Schneider
+
+![Startseite des Cocktail-Finders mit dem Cocktail des Tages](docs/screenshot.png)
 
 ## Was die App kann
 
 - Cocktails nach Zutaten finden, die man zu Hause hat (auch mehrere gleichzeitig)
 - Filtern nach alkoholisch/alkoholfrei und Kategorie, sortieren nach Name oder Anzahl der Zutaten
 - Cocktail des Tages auf der Startseite, für alle Besucher am selben Tag derselbe
+- Läuft auf dem Handy wie am Desktop und hat einen Dark Mode
 
 ## Warum diese Idee
 
@@ -33,9 +36,12 @@ npm install     # einmalig, holt Vite und Tailwind
 npm run dev     # Dev-Server auf http://localhost:5173
 npm run build   # fertige Seite nach dist/
 npm run preview # dist/ lokal ansehen
+npm run server  # Mini-Server mit /api/cocktails auf Port 3000 (Bonus Blatt 5)
 ```
 
 Live Server reicht nicht mehr, weil die Tailwind-Klassen erst durch Vite zu CSS werden.
+
+Online geht die Seite automatisch: Bei jedem Push auf `main` baut eine GitHub Action (`.github/workflows/deploy.yml`) das Projekt und veröffentlicht `dist/` auf GitHub Pages.
 
 ## Technik
 
@@ -54,6 +60,7 @@ Live Server reicht nicht mehr, weil die Tailwind-Klassen erst durch Vite zu CSS 
 | Claude | Blatt 2: Gramatik und Rechtschreibungsprüfung |
 | Claude | Blatt 3: Gramatik und Rechtschreibungsprüfung |
 | Claude | Blatt 4: Gramatik und Rechtschreibungsprüfung, Fehler mit Node 18 erklären lassen |
+| Claude | Blatt 5: 404er der Live-Seite erklären lassen, GitHub Action fürs Deployment erklären lassen |
 
 
 **Ein Fall, in dem KI geholfen hat:** Bevor ich mich auf den Cocktail-Finder festgelegt habe, habe ich die API gründlich testen lassen. Dabei kam heraus, dass `filter.php?i=Gin` mit dem Test-Key immer nur einen einzigen Cocktail liefert. Daraufhin habe ich das Konzept umgestellt: Alle Cocktails werden über `search.php?f=` geladen und im Browser gefiltert. Dadurch geht jetzt sogar die Suche nach mehreren Zutaten.
@@ -140,3 +147,27 @@ Tailwind ist auf 4.1 festgelegt, weil die Versionen ab 4.2 Node 20 voraussetzen 
 1. *Was bedeutet die Einheit `fr` in `grid-template-columns: 1fr 3fr`?* `fr` steht für fraction. Der verfügbare Platz wird dabei entsprechend den angegebenen Anteilen aufgeteilt. In diesem Beispiel wird er in vier gleich große Teile geteilt. Die erste Spalte erhält ein Viertel und die zweite drei Viertel des verfügbaren Platzes.
 2. *Was macht `npm run build` mit dem Projektordner?* Es startet `vite build` aus den `scripts` in `package.json`. Vite liest die drei HTML-Seiten, bündelt CSS und JavaScript, lässt Tailwind nur die benutzten Klassen erzeugen, minifiziert alles und hängt einen Hash an die Dateinamen (`app-CVLrnnRM.css`), damit der Browser nach einer Änderung nicht die alte Version aus dem Cache nimmt. Das Ergebnis steht in `dist/`. Auf den Server kommt nur `dist/`: `node_modules/`, `package.json` und die Quelldateien braucht der Browser nicht, und `node_modules/` allein ist schon viel größer als die ganze Seite.
 3. *Warum `node_modules/` nicht ins Repo, `package-lock.json` aber schon?* `node_modules/` lässt sich mit `npm install` jederzeit neu erzeugen, ist groß und enthält teilweise Dateien für das jeweilige Betriebssystem, bei Tailwind zum Beispiel ein eigenes Programm für Linux. `package-lock.json` hält fest, welche Version jedes Pakets genau installiert wurde. Ohne die Datei würde `"^6.0.0"` bei Simon vielleicht eine andere Vite-Version installieren als bei mir.
+
+### Blatt 5 · Online gehen
+
+- Die Seite läuft unter <https://max-guenther.github.io/Web-Engineering/>. Weil wir mit Vite bauen, veröffentlicht eine GitHub Action bei jedem Push den Inhalt von `dist/`, nicht den Projektordner.
+- Network-Tab der Live-Seite nach dem Neuladen: Alle Requests der drei Seiten kommen mit 200 zurück.
+- Im Repo stehen keine Geheimnisse. Ich habe Arbeitskopie und Git-Historie nach `key`, `token`, `secret`, `password` und typischen Key-Formaten durchsucht. Der einzige Schlüssel im Projekt ist der Test-Key `1` von TheCocktailDB, der öffentlich in deren Doku steht. `.env` steht in der `.gitignore`, falls später doch ein geheimer Key dazukommt.
+
+**Lokal gegen live:** Bevor die Action eingerichtet war, hat GitHub Pages einfach den Branch `main` ausgeliefert, also die Quelldateien statt des Builds.
+
+1. Die Karte „Cocktail des Tages“ war live ungestylt, das Badge stand als normaler Text über dem Namen. Lokal macht Vite aus den Tailwind-Klassen CSS, live wurde `style.css` roh ausgeliefert und die Imports `tailwindcss/theme.css` und `utilities.css` liefen auf 404.
+2. `robots.txt`, `sitemap.xml` und `llms.txt` gaben live 404. Sie liegen seit Blatt 4 in `public/`, und erst der Build kopiert sie nach oben in `dist/`.
+3. `/favicon.ico` gab 404, und zwar an der Domain-Wurzel `max-guenther.github.io/favicon.ico`, nicht in unserem Repo-Ordner. Lokal fällt so etwas nicht auf, weil dort die Domain-Wurzel `localhost:5173/` und der Projektordner dasselbe sind. Jetzt gibt jede Seite mit `<link rel="icon">` ein eigenes Favicon an. Dazu baut Vite mit `base: "./"`, damit alle Pfade relativ bleiben und unter `/Web-Engineering/` stimmen.
+
+**Bonus, eigener Server:** `server/server.js` ist der Mini-Server aus dem Baustein mit einer eigenen Route `/api/cocktails`, die nach `?zutat=` und `?alkohol=alkoholisch|alkoholfrei` filtert, zum Beispiel `/api/cocktails?zutat=lime&alkohol=alkoholfrei`.
+Ein eigener Server ist nötig, sobald etwas geheim bleiben muss (ein API-Key, eine Datenbank, Passwörter) oder Daten von allen Besuchern gespeichert werden sollen. Für unsere Seite reicht GitHub Pages, weil TheCocktailDB ohne geheimen Key direkt aus dem Browser abgefragt werden kann und GitHub nur fertige Dateien ausliefern muss.
+
+**Verständnisfragen**
+
+1. *200, 404, 500 und wer ist schuld?* 200 heißt, die Anfrage hat geklappt. 404 heißt, unter dieser Adresse gibt es nichts: Meist ist der Client schuld, also ein falscher Pfad im HTML oder ein Tippfehler in der URL. Deshalb beginnen alle 4xx-Codes mit 4. 500 heißt, der Server ist beim Bearbeiten abgestürzt oder hat einen Fehler im eigenen Code. Da ist der Server schuld, und der Client kann durch neues Laden nichts ändern.
+2. *Lokal geht es, live nicht: drei Ursachen?*
+   - Absolute Pfade wie `/style.css` zeigen live auf die Domain-Wurzel statt in den Repo-Ordner. Prüfen: Network-Tab, bei der roten Zeile die angefragte URL ansehen.
+   - Groß- und Kleinschreibung: `Logo.png` gegen `logo.png` ist unter Windows und macOS dasselbe, auf dem Server nicht. Prüfen: Dateinamen im Repo auf GitHub mit dem Pfad im HTML vergleichen.
+   - Es wurde der falsche Stand ausgeliefert, zum Beispiel der Quellordner statt `dist/`, oder der Push ist noch nicht durch. Prüfen: Im Actions-Tab nachsehen, ob der letzte Lauf grün ist, und im Browser per Quelltext ansehen, ob die Dateinamen den Hash aus dem Build haben.
+3. *Datei, lokaler Server, Hosting?* Eine Datei öffnet der Browser direkt von der Festplatte (`file:///…`). Da läuft kein HTTP, und manches wie Module oder `fetch` auf lokale Dateien geht dann nicht. Ein lokaler Server (`npm run dev`, Live Server) liefert die Dateien per HTTP aus, aber nur auf dem eigenen Rechner unter `localhost`. Hosting ist ein Server im Internet, der immer läuft und unter einer öffentlichen Adresse für alle erreichbar ist, bei uns GitHub Pages.
